@@ -2,8 +2,6 @@ package com.dx168.fastdex.build.util
 
 import com.android.build.api.transform.Transform
 import com.dx168.fastdex.build.variant.FastdexVariant
-import org.gradle.api.ProjectConfigurationException
-import org.gradle.process.JavaExecSpec
 import org.objectweb.asm.*
 import com.android.ide.common.blame.Message
 import com.android.ide.common.blame.ParsingProcessOutputHandler
@@ -115,18 +113,8 @@ public class DexOperation implements Opcodes {
         if (!FileUtils.isLegalFile(dexMergeCommandJarFile)) {
             FileUtils.copyResourceUsingStream(Constant.DEX_MERGE_JAR_FILENAME,dexMergeCommandJarFile)
         }
-//        project.javaexec { JavaExecSpec exec ->
-//            exec.classpath = project.files(dexMergeCommandJarFile)
-//            exec.main = 'com.android.dx.merge.DexMerger'
-//            exec.jvmArgs = [
-//                    "${outputDex.absolutePath}",
-//                    "${patchDex.absolutePath}",
-//                    "${cachedDex.absolutePath}"
-//            ]
-//        }
 
-        String cmd = "/Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home/bin/java -jar ${dexMergeCommandJarFile} ${outputDex} ${patchDex} ${cachedDex}"
-
+        String cmd = "${FastdexUtils.getJavaCmdPath()} -jar ${dexMergeCommandJarFile} ${outputDex} ${patchDex} ${cachedDex}"
         if (fastdexVariant.configuration.debug) {
             project.logger.error("==fastdex merge dex: \n${cmd}")
         }

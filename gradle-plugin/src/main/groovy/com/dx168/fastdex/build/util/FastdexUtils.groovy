@@ -19,6 +19,11 @@ import java.util.zip.ZipOutputStream
  * Created by tong on 17/3/14.
  */
 public class FastdexUtils {
+    /**
+     * 获取sdk路径
+     * @param project
+     * @return
+     */
     public static final String getSdkDirectory(Project project) {
         String sdkDirectory = project.android.getSdkDirectory()
         if (sdkDirectory.contains("\\")) {
@@ -26,6 +31,12 @@ public class FastdexUtils {
         }
         return sdkDirectory
     }
+
+    /**
+     * 获取dx命令路径
+     * @param project
+     * @return
+     */
     public static final String getDxCmdPath(Project project) {
         File dx = new File(FastdexUtils.getSdkDirectory(project),"build-tools${File.separator}${project.android.getBuildToolsVersion()}${File.separator}dx")
         if (Os.isFamily(Os.FAMILY_WINDOWS)) {
@@ -33,6 +44,41 @@ public class FastdexUtils {
         }
         return dx.getAbsolutePath()
     }
+
+    /**
+     * 获取当前jdk路径
+     * @return
+     */
+    public static final String getCurrentJdk() {
+        String javaHomeProp = System.properties.'java.home'
+        if (javaHomeProp) {
+            int jreIndex = javaHomeProp.lastIndexOf("${File.separator}jre")
+            if (jreIndex != -1) {
+                return javaHomeProp.substring(0, jreIndex)
+            } else {
+                return javaHomeProp
+            }
+        } else {
+            return System.getenv("JAVA_HOME")
+        }
+    }
+
+    /**
+     * 获取java命令路径
+     * @return
+     */
+    public static final String getJavaCmdPath() {
+        StringBuilder cmd = new StringBuilder(getCurrentJdk())
+        if (!cmd.toString().endsWith(File.separator)) {
+            cmd.append(File.separator)
+        }
+        cmd.append("bin${File.separator}java")
+        if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+            cmd.append(".exe")
+        }
+        return new File(cmd.toString()).absolutePath
+    }
+
 
     /**
      * 获取fastdex的build目录

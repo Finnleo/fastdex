@@ -23,5 +23,5 @@ public class FastdexExtension {
     /**
      * 当变化的java文件数量超过阈值,触发dex merge
      */
-    int dexMergeThreshold = 5
+    int dexMergeThreshold = 6
 }

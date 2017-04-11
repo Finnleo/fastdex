@@ -70,15 +70,15 @@ class FastdexTransform extends TransformProxy {
             if (fastdexVariant.projectSnapshoot.diffResultSet.isJavaFileChanged()) {
                 //生成补丁jar包
                 File patchJar = generatePatchJar(transformInvocation)
-                File patchDex = new File(FastdexUtils.getBuildDir(project,variantName),"classes.dex")
+                File patchDex = new File(FastdexUtils.getBuildDir(project,variantName),"patch.dex")
 
                 DexOperation.generatePatchDex(fastdexVariant,base,patchJar,patchDex)
                 //获取dex输出路径
                 File dexOutputDir = GradleUtils.getDexOutputDir(project,base,transformInvocation)
-                project.logger.error("==fastdex patch transform dex dir: ${dexOutputDir}")
                 if (fastdexVariant.willExeDexMerge()) {
                     //merge dex
                     File cacheDexDir = FastdexUtils.getDexCacheDir(project,variantName)
+                    FileUtils.cleanDir(dexOutputDir)
 
                     File outputDex = new File(dexOutputDir,Constant.CLASSES_DEX)
                     File cachedDex = new File(cacheDexDir,Constant.CLASSES_DEX)

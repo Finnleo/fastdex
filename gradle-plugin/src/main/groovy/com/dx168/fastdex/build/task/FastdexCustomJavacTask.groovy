@@ -42,7 +42,6 @@ public class FastdexCustomJavacTask extends DefaultTask {
         def projectSnapshoot = fastdexVariant.projectSnapshoot
 
         if (!project.fastdex.useCustomCompile) {
-            project.logger.error("==fastdex useCustomCompile=false,disable customJavacTask")
             return
         }
 
@@ -93,6 +92,7 @@ public class FastdexCustomJavacTask extends DefaultTask {
         def fork = javaCompileTask.options.fork
         def executable = javaCompileTask.options.forkOptions.executable
 
+        project.logger.error("==fastdex executable ${executable}")
         //处理retrolambda
         if (project.plugins.hasPlugin("me.tatarka.retrolambda")) {
             fork = true

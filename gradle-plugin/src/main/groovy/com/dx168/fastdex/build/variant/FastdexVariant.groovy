@@ -22,7 +22,6 @@ public class FastdexVariant {
     final ProjectSnapshoot projectSnapshoot
     boolean hasDexCache
     boolean firstPatchBuild
-    String javaExePath
 
     FastdexVariant(Project project, Object androidVariant) {
         this.project = project
@@ -33,7 +32,6 @@ public class FastdexVariant {
         this.manifestPath = androidVariant.outputs.first().processManifest.manifestOutputFile
         this.rootBuildDir = FastdexUtils.getBuildDir(project)
         this.buildDir = FastdexUtils.getBuildDir(project,variantName)
-        this.javaExePath = androidVariant.javaCompile.options.forkOptions.executable
 
         projectSnapshoot = new ProjectSnapshoot(this)
 
@@ -114,7 +112,7 @@ public class FastdexVariant {
         }
 
         if (hasDexCache) {
-            project.logger.error("==fastdex discover cached for ${variantName.toLowerCase()}")
+            project.logger.error("==fastdex discover dex cache for ${variantName.toLowerCase()}")
         }
         else {
             FastdexUtils.cleanCache(project,variantName)
