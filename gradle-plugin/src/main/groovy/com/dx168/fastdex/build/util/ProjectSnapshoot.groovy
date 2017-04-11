@@ -47,12 +47,16 @@ public class ProjectSnapshoot {
         }
         else {
             //save
-            saveSourceSetSnapshoot(sourceSetSnapshoot)
+            saveCurrentSourceSetSnapshoot()
         }
     }
 
     def saveSourceSetSnapshoot(SourceSetSnapshoot snapshoot) {
         snapshoot.serializeTo(new FileOutputStream(FastdexUtils.getSourceSetSnapshootFile(fastdexVariant.project,fastdexVariant.variantName)))
+    }
+
+    def saveCurrentSourceSetSnapshoot() {
+        saveSourceSetSnapshoot(sourceSetSnapshoot)
     }
 
     def saveDiffResultSet() {

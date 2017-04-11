@@ -144,6 +144,12 @@ public class FastdexUtils {
         return cachedDependListFile
     }
 
+    /**
+     * 获取缓存的java文件对比结果文件
+     * @param project
+     * @param variantName
+     * @return
+     */
     public static File getDiffResultSetFile(Project project,String variantName) {
         File diffResultFile = new File(getBuildDir(project,variantName),Constant.LAST_DIFF_RESULT_SET_FILENAME)
         return diffResultFile
@@ -216,6 +222,8 @@ public class FastdexUtils {
 
         FileUtils.deleteFile(patchJar)
 
+        boolean willExeDexMerge = fastdexVariant.willExeDexMerge()
+
         ZipOutputStream outputJarStream = new ZipOutputStream(new FileOutputStream(patchJar));
         try {
             for (File classpathFile : directoryInputFiles) {
@@ -244,6 +252,11 @@ public class FastdexUtils {
                                     project.logger.error("==fastdex add entry: ${e}")
                                 }
                                 byte[] bytes = FileUtils.readContents(file.toFile())
+                                //如果需要触发dex merge,必须注入代码
+                                if (willExeDexMerge) {
+                                    bytes = ClassInject.inject(bytes)
+                                    project.logger.error("==fastdex inject: ${entryName}")
+                                }
                                 outputJarStream.write(bytes,0,bytes.length)
                                 outputJarStream.closeEntry()
                                 break;
